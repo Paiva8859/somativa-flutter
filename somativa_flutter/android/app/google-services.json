@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "883862595684",
+    "project_id": "somativa-flutter",
+    "storage_bucket": "somativa-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:883862595684:android:2136700c240c2f03b51771",
+        "android_client_info": {
+          "package_name": "com.exa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChvV82q7KQBlyRW8la-SRnZbPtgbABgLo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:883862595684:android:feed6ea3472c4665b51771",
+        "android_client_info": {
+          "package_name": "com.example.somativa_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChvV82q7KQBlyRW8la-SRnZbPtgbABgLo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
