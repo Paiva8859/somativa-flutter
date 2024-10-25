@@ -164,8 +164,17 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('Localização do Usuário'),
+        title: const Text(
+          'Localização do Usuário',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
+        ),
+        backgroundColor: Colors.red[700],
+        elevation: 5,
       ),
       body: Column(
         children: [
@@ -173,7 +182,12 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               _closestAmbiente,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
             ),
           ),
           Expanded(
@@ -182,29 +196,74 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (context, index) {
                 final ambiente = _nearbyAmbientes[index];
                 return Card(
-                  margin: const EdgeInsets.all(8.0),
+                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
                   child: ListTile(
-                    title: Text(ambiente['localizacao']),
-                    subtitle: Text("ID: ${ambiente['id']}"),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    leading: const Icon(
+                      Icons.business,
+                      color: Colors.red,
+                      size: 40,
+                    ),
+                    title: Text(
+                      ambiente['localizacao'],
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                      ),
+                    ),
+                    subtitle: Text(
+                      "ID: ${ambiente['id']}",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
                     trailing: Text(
-                        "Distância: ${ambiente['distance'].toStringAsFixed(2)} m"),
-                    onTap: () {
-                      _checkAuthorization(ambiente['id']);
-                    },
+                      "Distância: ${ambiente['distance'].toStringAsFixed(2)} m",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        color: Colors.red[700],
+                      ),
+                    ),
                   ),
                 );
               },
             ),
           ),
           Container(
-            padding: EdgeInsets.all(16.0),
-            color: Colors.grey[200],
-            child: Text(
-              _userPosition != null
-                  ? "Coordenadas do Usuário:\nLatitude: ${_userPosition!.latitude}\nLongitude: ${_userPosition!.longitude}"
-                  : "Localização do usuário não disponível",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16),
+            padding: const EdgeInsets.all(16.0),
+            margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            decoration: BoxDecoration(
+              color: Colors.red[50],
+              borderRadius: BorderRadius.circular(12.0),
+              border: Border.all(color: Colors.red[300]!, width: 2),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  _userPosition != null
+                      ? "Coordenadas do Usuário:\n"
+                          "Latitude: ${_userPosition!.latitude}\n"
+                          "Longitude: ${_userPosition!.longitude}"
+                      : "Localização do usuário não disponível",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Icon(
+                  Icons.location_on,
+                  color: Colors.red,
+                  size: 30,
+                ),
+              ],
             ),
           ),
         ],
@@ -212,7 +271,8 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _getCurrentLocation,
         tooltip: 'Atualizar Localização',
-        child: const Icon(Icons.location_searching),
+        backgroundColor: Colors.red[700],
+        child: const Icon(Icons.my_location),
       ),
     );
   }
