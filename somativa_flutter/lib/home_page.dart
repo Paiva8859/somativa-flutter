@@ -11,7 +11,8 @@ class _HomePageState extends State<HomePage> {
   String _locationMessage = "Obtendo localização...";
   List<Map<String, dynamic>> _nearbyAmbientes = [];
   String _closestAmbiente = "Sem ambientes próximos";
-  
+  Position? _userPosition;
+
   @override
   void initState() {
     super.initState();
@@ -33,6 +34,7 @@ class _HomePageState extends State<HomePage> {
 
     Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     setState(() {
+      _userPosition = position;
       _locationMessage = "Localização: \nLatitude: ${position.latitude}\nLongitude: ${position.longitude}";
     });
 
@@ -98,6 +100,18 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               },
+            ),
+          ),
+          // Widget para exibir as coordenadas do usuário
+          Container(
+            padding: EdgeInsets.all(16.0),
+            color: Colors.grey[200],
+            child: Text(
+              _userPosition != null
+                  ? "Coordenadas do Usuário:\nLatitude: ${_userPosition!.latitude}\nLongitude: ${_userPosition!.longitude}"
+                  : "Localização do usuário não disponível",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16),
             ),
           ),
         ],
