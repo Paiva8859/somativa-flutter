@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    //_checkBiometricSupport();
+    _checkBiometricSupport();
     autentica();
     _getCurrentLocation();
   }
@@ -41,7 +41,6 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _checkBiometricSupport() async {
     try {
-      // Verifica se o dispositivo suporta biometria e se há biometria registrada
       bool canAuthenticateWithBiometrics = await _localAuth.canCheckBiometrics;
       bool canAuthenticate = await _localAuth.isDeviceSupported();
       bool hasBiometrics = await _localAuth
@@ -54,8 +53,7 @@ class _HomePageState extends State<HomePage> {
       });
 
       if (!_biometricAvailable) {
-        _showMessage(
-            "Este dispositivo não suporta ou não possui biometria registrada.");
+        _showMessage("Este dispositivo não suporta ou não possui biometria registrada.");
       }
     } catch (e) {
       print("Erro ao verificar suporte à biometria: $e");
@@ -71,8 +69,7 @@ class _HomePageState extends State<HomePage> {
 
     if (permission == LocationPermission.deniedForever) {
       setState(() {
-        _locationMessage =
-            "Permissão negada. Não é possível obter a localização.";
+        _locationMessage = "Permissão negada. Não é possível obter a localização.";
       });
       return;
     }
@@ -135,7 +132,7 @@ class _HomePageState extends State<HomePage> {
           .doc(userEmail)
           .get();
 
-      if (userDoc.exists == false) {
+      if (!userDoc.exists) {
         _showMessage("Acesso negado: usuário não autorizado");
       } else {
         autentica();
@@ -229,6 +226,9 @@ class _HomePageState extends State<HomePage> {
                         color: Colors.red[700],
                       ),
                     ),
+                    onTap: () {
+                      _checkAuthorization(ambiente['id']);
+                    },
                   ),
                 );
               },

@@ -29,7 +29,35 @@ class _SignupPageState extends State<SignupPage> with SingleTickerProviderStateM
     );
   }
 
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+
+  bool _validateInputs() {
+    if (_emailController.text.isEmpty) {
+      _showError('Por favor, insira seu email.');
+      return false;
+    }
+    if (_passwordController.text.isEmpty) {
+      _showError('Por favor, insira sua senha.');
+      return false;
+    }
+    if (_passwordController.text.length < 6) {
+      _showError('A senha deve ter pelo menos 6 caracteres.');
+      return false;
+    }
+    return true;
+  }
+
   void _signup() async {
+    if (!_validateInputs()) return;
+
     try {
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
@@ -41,8 +69,7 @@ class _SignupPageState extends State<SignupPage> with SingleTickerProviderStateM
       );
       print('Conta criada: ${userCredential.user?.email}');
     } catch (e) {
-      print(e);
-      // Exiba uma mensagem de erro ao usuário
+      _showError('Erro ao criar conta: ${e.toString()}');
     }
   }
 

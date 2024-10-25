@@ -30,7 +30,31 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     );
   }
 
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+
+  bool _validateInputs() {
+    if (_emailController.text.isEmpty) {
+      _showError('Por favor, insira seu email.');
+      return false;
+    }
+    if (_passwordController.text.isEmpty) {
+      _showError('Por favor, insira sua senha.');
+      return false;
+    }
+    return true;
+  }
+
   void _login() async {
+    if (!_validateInputs()) return;
+
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
@@ -42,8 +66,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       );
       print('Login realizado: ${userCredential.user?.email}');
     } catch (e) {
-      print(e);
-      // Exiba uma mensagem de erro ao usuário
+      _showError('Erro ao realizar login: ${e.toString()}');
     }
   }
 
