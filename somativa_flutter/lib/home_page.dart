@@ -53,7 +53,8 @@ class _HomePageState extends State<HomePage> {
       });
 
       if (!_biometricAvailable) {
-        _showMessage("Este dispositivo não suporta ou não possui biometria registrada.");
+        _showMessage(
+            "Este dispositivo não suporta ou não possui biometria registrada.");
       }
     } catch (e) {
       print("Erro ao verificar suporte à biometria: $e");
@@ -69,7 +70,8 @@ class _HomePageState extends State<HomePage> {
 
     if (permission == LocationPermission.deniedForever) {
       setState(() {
-        _locationMessage = "Permissão negada. Não é possível obter a localização.";
+        _locationMessage =
+            "Permissão negada. Não é possível obter a localização.";
       });
       return;
     }
@@ -108,11 +110,13 @@ class _HomePageState extends State<HomePage> {
       }
     }
 
+    // Ordena a lista de ambientes pela distância
+    ambientes.sort((a, b) => a['distance'].compareTo(b['distance']));
+
     setState(() {
       _nearbyAmbientes = ambientes;
       _closestAmbiente = ambientes.isNotEmpty
-          ? ambientes.reduce(
-              (a, b) => a['distance'] < b['distance'] ? a : b)['localizacao']
+          ? ambientes.first['localizacao']
           : "Sem ambientes próximos";
     });
   }
@@ -193,27 +197,29 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (context, index) {
                 final ambiente = _nearbyAmbientes[index];
                 return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  margin:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   elevation: 4,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 16),
                     leading: const Icon(
                       Icons.business,
                       color: Colors.red,
                       size: 40,
                     ),
                     title: Text(
-                      ambiente['localizacao'],
+                      "${ambiente['id']}",
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
                       ),
                     ),
                     subtitle: Text(
-                      "ID: ${ambiente['id']}",
+                      ambiente['localizacao'],
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey[600],
