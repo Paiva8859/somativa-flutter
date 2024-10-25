@@ -49,22 +49,12 @@ class _SignupPageState extends State<SignupPage> {
               ),
               const SizedBox(height: 20),
               const Text(
-                'Join Us!',
+                'Cadastre-se',
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: 'Your Name',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
               ),
               const SizedBox(height: 20),
               TextField(
