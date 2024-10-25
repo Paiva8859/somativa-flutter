@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:local_auth/local_auth.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -14,11 +16,51 @@ class _HomePageState extends State<HomePage> {
   List<Map<String, dynamic>> _nearbyAmbientes = [];
   String _closestAmbiente = "Sem ambientes próximos";
   Position? _userPosition;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final LocalAuthentication _localAuth = LocalAuthentication();
+  bool _biometricAvailable = false;
 
   @override
   void initState() {
     super.initState();
+    //_checkBiometricSupport();
+    autentica();
     _getCurrentLocation();
+  }
+
+  autentica() async {
+    bool canAuthenticateWithBiometrics = await _localAuth.canCheckBiometrics;
+    if (canAuthenticateWithBiometrics) {
+      final didAuth = await _localAuth.authenticate(
+          localizedReason: "Por favor, insira sua credencial");
+      if (didAuth) {
+        _showMessage('Acesso autorizado!');
+      }
+    }
+  }
+
+  Future<void> _checkBiometricSupport() async {
+    try {
+      // Verifica se o dispositivo suporta biometria e se há biometria registrada
+      bool canAuthenticateWithBiometrics = await _localAuth.canCheckBiometrics;
+      bool canAuthenticate = await _localAuth.isDeviceSupported();
+      bool hasBiometrics = await _localAuth
+          .getAvailableBiometrics()
+          .then((biometrics) => biometrics.isNotEmpty);
+
+      setState(() {
+        _biometricAvailable =
+            canAuthenticate && canAuthenticateWithBiometrics && hasBiometrics;
+      });
+
+      if (!_biometricAvailable) {
+        _showMessage(
+            "Este dispositivo não suporta ou não possui biometria registrada.");
+      }
+    } catch (e) {
+      print("Erro ao verificar suporte à biometria: $e");
+      _showMessage("Erro ao verificar suporte à biometria.");
+    }
   }
 
   Future<void> _getCurrentLocation() async {
@@ -29,7 +71,8 @@ class _HomePageState extends State<HomePage> {
 
     if (permission == LocationPermission.deniedForever) {
       setState(() {
-        _locationMessage = "Permissão negada. Não é possível obter a localização.";
+        _locationMessage =
+            "Permissão negada. Não é possível obter a localização.";
       });
       return;
     }
@@ -42,7 +85,6 @@ class _HomePageState extends State<HomePage> {
           "Localização: \nLatitude: ${position.latitude}\nLongitude: ${position.longitude}";
     });
 
-    // Obter ambientes próximos
     await _fetchNearbyAmbientes(position.latitude, position.longitude);
   }
 
@@ -59,7 +101,6 @@ class _HomePageState extends State<HomePage> {
           latitude, longitude, ambienteLatitude, ambienteLongitude);
 
       if (distance <= 20) {
-        // Filtrando ambientes dentro de 20 metros
         ambientes.add({
           'id': doc.id,
           'localizacao': doc['localizacao'],
@@ -73,9 +114,51 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _nearbyAmbientes = ambientes;
       _closestAmbiente = ambientes.isNotEmpty
-          ? ambientes.reduce((a, b) => a['distance'] < b['distance'] ? a : b)['localizacao']
+          ? ambientes.reduce(
+              (a, b) => a['distance'] < b['distance'] ? a : b)['localizacao']
           : "Sem ambientes próximos";
     });
+  }
+
+  Future<void> _checkAuthorization(String ambienteId) async {
+    try {
+      String userEmail = _auth.currentUser?.email ?? "";
+      if (userEmail.isEmpty) {
+        _showMessage("Usuário não autenticado");
+        return;
+      }
+
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('Ambientes')
+          .doc(ambienteId)
+          .collection('usuarios_autorizados')
+          .doc(userEmail)
+          .get();
+
+      if (userDoc.exists == false) {
+        _showMessage("Acesso negado: usuário não autorizado");
+      } else {
+        autentica();
+      }
+    } catch (e) {
+      print("Erro na verificação de autorização: $e");
+      _showMessage("Erro na verificação de autorização.");
+    }
+  }
+
+  void _showMessage(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
