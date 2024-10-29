@@ -42,6 +42,7 @@ dependencies:
   geolocator: ^13.0.1
   http: ^1.2.2
   local_auth: ^2.3.0
+  mockito: ^5.4.4
 
 dev_dependencies:
   flutter_test:
@@ -95,3 +96,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
