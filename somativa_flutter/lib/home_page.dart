@@ -26,8 +26,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState(); // Chama o método initState da superclasse
-    _checkBiometricSupport(); // Verifica suporte à biometria
-    autentica(); // Tenta autenticar o usuário
     _getCurrentLocation(); // Obtém a localização atual do usuário
   }
 
