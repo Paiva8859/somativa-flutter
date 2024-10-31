@@ -239,3 +239,11 @@ Para implementar a função de geolocalização utilizamos a API ```Geolocator``
 
 ## Banco de dados:
 Escolhemos utilizar o Firestore Database como nosso banco de dados NoSQL por se tratar de um banco de dados seguro e em núvem, com várias bibliotecas e ferramentas prontas para uso em nossa aplicação.
+
+# Testes:
+## API Geolocator
+Como forma de teste da API Geolocator, a página home da aplicação conta com um widget que exibe o estado da conexão com a API:
+![Screenshot_2024-10-31-14-34-13-900_com example somativa_flutter](https://github.com/user-attachments/assets/87abfb3a-bba0-4309-8da8-167d0b855944)
+
+## Suporte Autenticação Biométrica:
+Ao inicar a aplicação, ela analisa se o dispositivo tem suporte biométrico configurado, iniciando a aplicação somente em caso positivo.
