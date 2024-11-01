@@ -158,6 +158,51 @@ Antes de instalar a aplicação, verifique se você possui os seguintes requisit
      ```
 ---
 
+## Diagrama de Fluxo:
+```mermaid
+            flowchart TD
+                A[Início] --> B{Usuário já tem conta?}
+                B -- Sim --> C[Ir para LoginPage]
+                B -- Não --> D[Ir para SignupPage]
+                
+                C --> E[Inserir Email]
+                E --> F[Inserir Senha]
+                F --> G{Campos válidos?}
+                G -- Sim --> H[Tentar Login]
+                H --> I{Login bem-sucedido?}
+                I -- Sim --> J[Navegar para HomePage]
+                I -- Não --> K[Mostrar mensagem de erro]
+                
+                D --> L[Inserir Email]
+                L --> M[Inserir Senha]
+                M --> N{Campos válidos?}
+                N -- Sim --> O[Tentar criar conta]
+                O --> P{Conta criada com sucesso?}
+                P -- Sim --> Q[Navegar para LoginPage]
+                P -- Não --> R[Mostrar mensagem de erro]
+                
+                K --> F
+                R --> L
+                
+                %% Adicionando a lógica da HomePage
+                J --> S[Obter Localização Atual]
+                S --> T{Permissão de Localização?}
+                T -- Sim --> U[Buscar Ambientes Próximos]
+                T -- Não --> V[Mostrar mensagem de erro]
+                
+                U --> W[Exibir Ambiente mais Próximo]
+                W --> X[Exibir lista de Ambientes Próximos]
+                X --> Y[Selecionar Ambiente]
+                
+                Y --> Z{Usuário autorizado?}
+                Z -- Sim --> AA[Tentar autenticar via biometria]
+                Z -- Não --> AB[Mostrar mensagem de acesso negado]
+                
+                AA --> AC{Autenticação bem-sucedida?}
+                AC -- Sim --> AD[Acesso ao Ambiente]
+                AC -- Não --> AE[Mostrar mensagem de erro]
+```
+
 ## Página de Login
 
 ### Como Usar
